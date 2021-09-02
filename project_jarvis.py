@@ -1,31 +1,29 @@
-import pyttsx3  # it is text to speach conversion library import to use speak function
+import pyttsx3
 import datetime
-import speech_recognition as sr  # to take input voice cammand and convert in text
+import speech_recognition as sr
 import wikipedia
-import webbrowser  # so we can access web page and browse command
-import os  # for opening app through command
-import random  # we use random module for playing random song
+import webbrowser
+import os
+import random
 import colorama
 from colorama import Fore
 from colorama import Style
-import psutil  # it gives information of running process and system utilization (memory,cpu,battery)
-import pyjokes  # import jokes library
+import psutil
+import pyjokes
 import pyautogui
-import time  # coz we have use time to stop listen by assistence
-# import winsound  this default library to play song in python
+import time
+
 from playsound import playsound
 
-engine = pyttsx3.init('sapi5')  # sapi 5 is developed by microsoft to use speech recognition
+engine = pyttsx3.init('sapi5')
 voice = engine.getProperty('voices')
-# print(voice[1].id) or print(voice[1].id)  coz in pc two voices are installed only
-engine.setProperty('voice', voice[0].id)  # it's set the voice which we are using among the 2
-engine.setProperty('rate', 170)  # it is use to decrease the speed of voice coz default one is very fast
+engine.setProperty('voice', voice[0].id)
+engine.setProperty('rate', 170)
 
 
-def speak(audio):  # we input some text which is speak by assistence
+def speak(audio):
     engine.say(audio)
     engine.runAndWait()
-
 
 
 def wishMe():
@@ -33,32 +31,31 @@ def wishMe():
     hour = int(datetime.datetime.now().strftime('%H'))
     if hour >= 0 and hour <= 12:
         engine.say("GOOD MORNING!! It's " + str(
-            hour) + "am")  # we can use speak function bt we cannot add variable content then
+            hour) + "am")
         engine.runAndWait()
     elif hour >= 12 and hour <= 18:
         engine.say("GOOD AFTERNOON!! It's " + str(
-            hour) + "pm")  # we can use speak function bt we cannot add variable content then
+            hour) + "pm")
         engine.runAndWait()
     else:
         engine.say("GOOD EVENING!! It's " + str(
-            hour) + "pm")  # we can use speak function bt we cannot add variable content then
+            hour) + "pm")
         engine.runAndWait()
     date = datetime.date.today()
     speak('The current date is'+str(date))
     speak(" i am jarvice!!How May I help You?")
 
 
-def takeCommand():  # this function is used to input voice command and return it into text
-    r = sr.Recognizer()  # its the function of sr which access the classes like recognize_google() which have access to web page
-    with sr.Microphone() as source:  # here we take the input voice command in source
-        # winsound.Beep(1000,60)   this uses default bepp sound in windows
+def takeCommand():
+    r = sr.Recognizer()
+    with sr.Microphone(device_index=1) as source:
         print(Fore.GREEN + Style.BRIGHT + "Listening.......")
         playsound(r'C:\Users\DELL\Music\songs\pop.mp3')
-        r.pause_threshold = 1  # it's the minimum time of user take pause before completing command
-        audio = r.listen(source)
+        r.pause_threshold = 1
+        audio = r.listen(source,timeout=5,phrase_time_limit=5)
     try:
         print(Fore.CYAN + Style.BRIGHT + "Recognizing......." + Style.RESET_ALL)
-        query = r.recognize_google(audio, language='en - in')  # its method of Recognizer function which access google web page
+        query = r.recognize_google(audio, language='en - in')
         print(Fore.RED + Style.BRIGHT + f"User Said:- {query}\n")
     except Exception as e:
         #  print(e)
@@ -68,11 +65,11 @@ def takeCommand():  # this function is used to input voice command and return it
 
 
 def cpu():
-    usage = str(psutil.cpu_percent())  # it tells the cpu usage
+    usage = str(psutil.cpu_percent())
     speak('CPU is at' + usage)
 
-    battery = psutil.sensors_battery()  # we didn't convert into str bcoz then it does not speak battery percent it speak all useless data
-    speak('BATTERY is at')  # it gives current battery percentage
+    battery = psutil.sensors_battery()
+    speak('BATTERY is at')
     speak(battery.percent)
 
 
@@ -84,21 +81,17 @@ def screenshot():
     img = pyautogui.screenshot()
     img.save(r'C:\Users\DELL\OneDrive\Pictures\Screenshots\jarvis.PNG')
     speak("screenshot has been taken")
-    # also it can can be done by another way
-    # img_loc = r'C:\Users\DELL\OneDrive\Pictures\Screenshots\.PNG'
-    # pyautogui.screenshot(imageFilename=img_loc)
 
 
 if __name__ == "__main__":
-    #wishMe()
+    wishMe()
     while True:
-        query = takeCommand().lower()      # logic for executing task takes command in query variable lower convert voice command in small letters
+        query = takeCommand().lower()
 
-    # if 1:  we can use bt it will run only one time
 
-        if 'wikipedia' in query:  # we called wikipedia word in command
+        if 'wikipedia' in query:
             speak('searching wikipedia!!!!!')
-            query = query.replace("wikipedia", '')  # after recognizing wikipedia in query we remove wikipedia word from command cause it's while loop its repetatly runs querry
+            query = query.replace("wikipedia", '')
             result = wikipedia.summary(query, sentences=2)
             print(Fore.BLUE + Style.BRIGHT + result)
             speak(result)
@@ -120,7 +113,7 @@ if __name__ == "__main__":
             speak('what should i search')
             search = takeCommand().lower()
             speak('opening youtube!!!')
-            webbrowser.open('https://www.youtube.com/results?search_query='+search)  # its open and brows youtube on webpage
+            webbrowser.open('https://www.youtube.com/results?search_query='+search)
 
         elif 'open google' in query:
             speak('what should i search on google?')
@@ -130,11 +123,11 @@ if __name__ == "__main__":
 
         elif 'play music' in query:
             speak("playing music")
-            Music_path = 'C:\\Users\\DELL\\Music\\songs'  # path off songs folder
-            songs = os.listdir(Music_path)  # it add all songs and make its list
-            random_song = random.randint(0, len(songs) - 1)  # we use random module for playing random song
+            Music_path = 'C:\\Users\\DELL\\Music\\songs'
+            songs = os.listdir(Music_path)
+            random_song = random.randint(0, len(songs) - 1)
             print(Fore.YELLOW + Style.BRIGHT + "\t[Now Playing....", songs[random_song], "]")
-            os.startfile(os.path.join(Music_path, songs[random_song]))  # its method of os
+            os.startfile(os.path.join(Music_path, songs[random_song]))
 
         elif 'open spotify' in query:
             speak('opening spotify')
@@ -157,7 +150,7 @@ if __name__ == "__main__":
         elif 'open whatsapp' in query:
             speak("opening whatsapp")
             path = 'C:\\Users\\DELL\\AppData\\Local\\WhatsApp\\WhatsApp.exe'
-            os.startfile(path)  # its starts file at this path
+            os.startfile(path)
 
         elif 'cpu' in query:
             print('analysing cpu....')
@@ -212,8 +205,8 @@ if __name__ == "__main__":
             screenshot()
 
         elif 'where is' in query:
-            query = query.replace('where is', '')  # by replacing where is with null we can take only location that user said 
-            location = query  # here we have only location said by user
+            query = query.replace('where is', '')
+            location = query
             print(Fore.YELLOW + Style.BRIGHT + "user asks to locate:-", location)
             webbrowser.open_new_tab(r'https://www.google.co.in/maps/place/'+location)
 
@@ -236,4 +229,3 @@ if __name__ == "__main__":
         else:
             speak('here are some results from google')
             webbrowser.open('https://www.google.co.in/search?q=' + query)
-
