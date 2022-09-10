@@ -1,6 +1,6 @@
 ******************* PROJECT1 - JARVIS *********************
 
-Its The AI Dekstop assistance to do things more easiar for the user.It includes the set of commands to operate the code.
+Its The Dekstop assistance to do things more easiar for the user.It includes the set of commands to operate the code.
 
 --------USE FOLLOWING KEYWORDS IN YOUR COMMANDS TO OPERATE CODE--------
 
